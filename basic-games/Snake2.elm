@@ -1,16 +1,13 @@
 import List as L
---import Array as A
---import Maybe as M
---import Graphics.Input (..)
 import Random exposing (..)
 import Color exposing (..)
 import Keyboard exposing (..)
---import Text
---import Window
 import Graphics.Element exposing (..)
 import Graphics.Collage exposing (..)
 import Signal exposing (..)
 import Time exposing (..)
+import Text exposing (fromString)
+import Debug
 
 --UTILITY
 (+.): (Int, Int) -> (Int, Int) -> (Int, Int)
@@ -26,7 +23,7 @@ genUntil f g s =
     else genUntil f g s'
 
 body : List a -> List a
-body li = L.drop (L.length li - 1) li
+body li = L.take (L.length li - 1) li
 
 head' : List (Int,Int) -> (Int, Int)
 head' li = 
@@ -34,6 +31,17 @@ head' li =
       Just x -> x 
       _      -> (0,0)
 
+{-| Usage: 
+    place' a b (x,y) form
+moves the bottom left corner of the form to (x,y) as measured from the lower-left of the canvas. 
+Here a and b are the width and height of the canvas. 
+Suggested usage: in the "view" function, define place as follows.
+    let
+        place = place' w h
+    in
+      collage w h [square 20 |> place (20,40),...]
+In this example, a square of side 20 is placed with lower left corner at (20,40).
+-}
 place' : Int -> Int -> (Int, Int) -> Form -> Form
 place' a b (x,y) = move ((toFloat (-a))/2 + toFloat x,(toFloat -b)/2 + toFloat y)
 
@@ -60,9 +68,11 @@ ymax = 25
 --A snake is a list
 type alias Snake = List (Int, Int)
 
-type alias Model = {xd : Int, yd : Int, size : Int, mouse: (Int,Int), snake : Snake, dir : (Int,Int), alive : Bool, seed : Seed}
+type alias Game = {xd : Int, yd : Int, size : Int, mouse: (Int,Int), snake : Snake, dir : (Int,Int), alive : Bool, seed : Seed}
 
-init : Int -> Model
+startGame = init 0
+
+init : Int -> Game
 init i = 
     let
         s = initialSeed i
@@ -76,9 +86,9 @@ init i =
 --where Input encapsulates all that the program needs to know from the outside world.
 
 --Move the snake
-step : (Int, Int) -> Model -> Model
-step dir m = 
-  let
+stepGame : Input -> Game -> Game
+stepGame (dir, b) m = 
+ (let
       --if no direction was received, then keep the original direction, else use the new direction.
       d = if dir == (0,0)
           then m.dir
@@ -108,14 +118,14 @@ step dir m =
             {m | snake <- hd::(body s), dir <- d}
     else
         --the snake hits the wall or itself, and dies
-        {m | alive <- False}
+        {m | alive <- False}) |> Debug.watchSummary "Snake" .snake
 
-inBounds : (Int, Int) -> Model -> Bool
+inBounds : (Int, Int) -> Game -> Bool
 inBounds (x,y) m = 
   (x > 0) && (y > 0) && (x <= m.xd) && (y <= m.yd)
 
 --the snake is alive, and has not hit the wall or itself. Pt is the new location of the head.
-checkOK: (Int,Int) -> Model -> Bool
+checkOK: (Int,Int) -> Game -> Bool
 checkOK pt m = 
   let
     s = m.snake
@@ -123,14 +133,13 @@ checkOK pt m =
     m.alive && (inBounds pt m) && not (pt `L.member` s)
 
 --VIEW
-render : Model -> Element
-render m = 
+renderGame : Game -> Element
+renderGame m = 
   let 
       place = place' ((m.xd + 2) * m.size) ((m.yd + 2) * m.size)
       (xm, ym) = m.mouse
-  in
-    collage ((m.xd + 2) * m.size) ((m.yd + 2) * m.size)
-                  (L.append 
+      mainPanel = collage ((m.xd + 2) * m.size) ((m.yd + 2) * m.size)
+                  ((L.append 
                     --a black rectangle that fills the canvas
                         [recti ((m.xd + 2) * m.size) ((m.yd + 2) * m.size)
                              |> filled (rgb 0 0 0),
@@ -145,6 +154,10 @@ render m =
                    (L.map (\(x,y) -> squari m.size
                                          |> filled (rgb 255 0 0)
                                          |> place (x*m.size + m.size//2,y*m.size + m.size//2)) m.snake))
+                    ++[if m.alive then toForm empty else fromString "Game Over, Press SPACE" |> centered |> toForm])
+  in
+    flow right [mainPanel, flow down [(fromString "Length:" |> centered), (fromString (toString (L.length m.snake)) |> centered)]]
+
 
 --SIGNALS
 --look at which arrow keys are down, and return a direction
@@ -152,11 +165,43 @@ inputDir : Signal (Int,Int)
 inputDir = 
   map4 (\l u d r -> ifs [(l, (-1,0)), (u, (0,1)), (d, (0,-1)), (r, (1,0))] (0,0)) (isDown 37) (isDown 38) (isDown 40) (isDown 39)
 
---get the input direction 20 times a second
-input : Signal (Int,Int)
-input = sampleOn (fps 20) inputDir
+type alias Input = ((Int, Int), Bool)
 
-main = map render (foldp step (init 0) input)
+--get the input direction 20 times a second
+input : Signal Input
+input = sampleOn (fps 20) (map2 (,) inputDir space)
+
+--Toplevel game
+
+--MODEL
+type Model = Waiting | Ingame Game
+
+startModel : Model
+startModel = Waiting
+
+--UPDATE
+step : Input -> Model -> Model
+step ((x,b) as inp) m = 
+    case m of
+      Waiting -> 
+        if b then Ingame startGame else Waiting
+      Ingame game -> 
+        if not game.alive && b then Waiting else Ingame (stepGame inp game)
+
+--VIEW
+render : Model -> Element
+render m = 
+    case m of 
+      Waiting -> renderWaiting
+      Ingame game -> renderGame game
+
+renderWaiting : Element
+renderWaiting = 
+    collage ((xmax + 2) * size) ((ymax + 2) * size) [(fromString "Press SPACE to begin." |> Text.color white) |> centered |> toForm] |> color black
+
+--SIGNAL
+main = map render (foldp step Waiting input)
+
 
 --Ideas:
 {-

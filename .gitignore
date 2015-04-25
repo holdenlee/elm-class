@@ -1,5 +1,9 @@
 
+*#
 *~
 *.js
 *.json
+*.gif
 elm-stuff/
+misc/
+lesson/
