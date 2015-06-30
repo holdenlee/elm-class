@@ -1,10 +1,11 @@
-import Color (..)
-import Keyboard (..)
+import Color exposing (..)
+import Keyboard exposing (..)
 import Text
 import Window
-import Graphics.Element (..)
-import Graphics.Collage (..)
-import Signal (..)
+import Graphics.Element exposing (..)
+import Graphics.Collage exposing (..)
+import Signal exposing (..)
+import Set as S
 
 --(!): List a -> Int -> a
 --li ! i = head (drop i li)
@@ -21,8 +22,8 @@ type alias Model = {keys : List Int}
 
 -- Updates
 
-stepModel : (List KeyCode) -> Model -> Model
-stepModel li m =  {m | keys <- li}
+stepModel : (S.Set KeyCode) -> Model -> Model
+stepModel s m =  {m | keys <- S.toList s}
 
 --Display
 
@@ -36,11 +37,12 @@ display (w,h) m =
 --Run
 
 txt : (Text.Text -> Text.Text) -> String -> Element
-txt f x = Text.leftAligned <| f <| Text.monospace <| (Text.color black) <| Text.fromString x
+txt f x = leftAligned <| f <| Text.monospace <| (Text.color black) <| Text.fromString x
 
 startModel : Model
 startModel = {keys = []}
 
+--gameModel : Signal Model
 gameModel = foldp stepModel startModel keysDown
 
 main = map2 display Window.dimensions gameModel
