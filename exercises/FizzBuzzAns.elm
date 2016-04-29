@@ -8,4 +8,10 @@ main = show (map fizzbuzz [1..15])
 -- Hint: ++ adds strings, "Fizz"++"Buzz" == "FizzBuzz"
 -- `toString` turns anything into a string
 fizzbuzz : Int -> String
-fizzbuzz n = ""
+fizzbuzz n = 
+    let
+        fizz = if (n%3==0) then "Fizz" else ""
+        buzz = if (n%5==0) then "Buzz" else ""
+        fb = fizz ++ buzz
+    in
+      if fb == "" then toString n else fb

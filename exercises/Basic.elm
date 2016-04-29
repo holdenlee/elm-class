@@ -1,46 +1,110 @@
 import Graphics.Element exposing (show)
 import List exposing (..)
-import Debug exposing (..)
+
+-- NUMBERS
 
 -- Assign a value
--- x : Int
-x = 1
-y = x + 1
--- s1 : String
+a : Int
+a = 1
+
+b = 2*a + 1
+
+-- NOT ALLOWED
+-- a = a + 1
+
+c : Float
+c = 5.5
+
+b1 : Int
+b1 = toFloat b
+
+-- BOOLEANS
+bool = (b < b1)
+bool2 = True && not (True || False)
+
+s1 : String
 s1 = "Hello "
+
 s2 = "World!"
+
 hw = s1++s2
+
+main = show (s1 ++ s2)
+
+-- LISTS
+
 -- b : Bool
-b = (y == 2)
-c = (x == 1) && b
+-- li : List Int
+li = [1,2,3,4]
+li1 = [1..4]
+li2 = 0::li
+li3 = [1,2,3] ++ [5,6,7]
 
--- Define a function
--- square : Int -> Int
+--FUNCTIONS
+
+addOne : Int -> Int
+addOne x = x + 1
+
+--main = show (addOne 2)
+
+addThree : Int -> Int
+addThree x = 
+  let
+    y = x + 1
+    z = y + 1
+  in 
+    z + 1
+
+multiplyAndAddOne : Int -> Int -> Int
+multiplyAndAddOne x y = 
+  let
+    p = x * y
+  in
+    p + 1
+
+square : Int -> Int
 square x = x^2
+-- square = \x -> x^2
+-- square = (^2)
 
+-- function composition
+m = 10
+double x = 2*x
+n = addOne (double x)
+--n = addOne <| double x
+doubleAndAddOne x = addOne <| double x
+doubleAndAddOne = addOne << double
+
+
+-- IF STATEMENTS
 -- abs : Int -> Int
 abs x = if x<0 
         then -x
         else x
 
--- recursion
--- triangular numbers 1+2+...+n
-triangle n = if n <= 0
-             then 0
-             else n + triangle (n-1)
+-- chaining
+admitRollerCoaster : Int -> String
+admitRollerCoaster x = 
+    if x <= 48 then
+        "too short"
+    else if x <= 72 then
+        "have fun"
+    else if x>72 then
+        "too tall"
 
--- Exercise: 
--- tetrahedral 1 = 1
--- tetrahedral 2 = 1 + (1 + 2)
--- tetrahedral 3 = 1 + (1 + 2) + (1 + 2 + 3) 
--- tetrahedral n = undefined
+-- OTHER DATA TYPES
 
+-- tuples
+(.+) : (Int, Int) -> (Int, Int)
+(.+) (x,y) (z,w) = (x+z, y+w)
 
+-- records
+type alias Point = { x:Float, y:Float }
 
--- Exercise:
-fizzbuzz : Int -> String
-fizzbuzz = 
+origin : Point
+origin =
+  { x = 0, y = 0 }
 
--- Show the numbers up to n as strings. However, any number divisible by three is replaced by the word `Fizz` and any divisible by five by the word `Buzz`. Numbers divisible by both become `FizzBuzz`.
--- For example, fizzbuzz 15 = [1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz]
--- Hint: ++ adds strings, "Fizz"++"Buzz" == "FizzBuzz"
+goUp : Point -> Point
+goUp pt = {pt | x = pt.x + 1}
+

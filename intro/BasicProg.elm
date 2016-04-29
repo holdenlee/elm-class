@@ -53,8 +53,10 @@ multiplyAndAddOne x y =
     p + 1
 --main = show (multiplyAndAddOne 2 3)
 
-withdraw : Int -> Int -> Int
-withdraw amt total = 
-  if amt < total then total - amt else 0
+--Higher-order functions
+doThrice : (a -> a) -> a -> a
+doThrice f x = f (f (f a))
 
---main = show (withdraw 100 10)
+addThree' = doThrice addOne 
+
+stutter = doThrice (\x -> "Hello "++x) "world!"
