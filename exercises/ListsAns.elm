@@ -56,16 +56,9 @@ sumEvens : List Int -> Int
 sumEvens = foldl (\x y -> if y%2==0 then x+y else x) 0
 --sumEvens = sum << filter (\x -> x&2==0) 
 
--- 8. Write a function that doubles each string and then appends them together
+-- 9. Write a function that doubles each string and then appends them together
 -- Ex. echoes ["hello", "world"] = "hellohelloworldworld"
 -- Hint: ++ adds strings, "hello"++"world" == "helloworld"
 echoes : List String -> String
 echoes = foldl (++) "" << map (\x -> x++x)
 --echoes = concat << map (\x -> x++x)
-
--- 10. Fizzbuzz
--- Show the numbers up to n as strings. However, any number divisible by three is replaced by the word `Fizz` and any divisible by five by the word `Buzz`. Numbers divisible by both become `FizzBuzz`.
--- For example, fizzbuzz 15 = [1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz]
--- Hint: ++ adds strings, "Fizz"++"Buzz" == "FizzBuzz"
-fizzbuzz : Int -> List String
-fizzbuzz = always 0
