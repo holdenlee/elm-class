@@ -1,11 +1,11 @@
-import Color (..)
-import Keyboard (..)
+import Color exposing (..)
+import Keyboard exposing (..)
 import Text
 import Window
-import Graphics.Element (..)
-import Graphics.Collage (..)
-import Signal (..)
-import Time (..)
+import Graphics.Element exposing (..)
+import Graphics.Collage exposing (..)
+import Signal exposing (..)
+import Time exposing (..)
 import List as L
 
 --(!): List a -> Int -> a
@@ -58,9 +58,9 @@ stepModel update m =
     case update of 
       LR x -> if x == -1 
               then m 
-              else if m.lastPressed == x then {m | score <- m.score - penalty}
-                   else {m | score <- m.score + 1, lastPressed <- x}
-      TimeDelta d -> {m | t <- m.t + d}
+              else if m.lastPressed == x then {m | score = m.score - penalty}
+                   else {m | score = m.score + 1, lastPressed = x}
+      TimeDelta d -> {m | t = m.t + d}
       Enter x -> m
    else 
     case update of 

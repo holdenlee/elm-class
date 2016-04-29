@@ -11,7 +11,7 @@ import Debug
 
 --UTILITY
 (+.): (Int, Int) -> (Int, Int) -> (Int, Int)
-(x0,y0) +. (x1,y1) = (x0 + x1, y0 + y1) 
+(+.) (x0,y0) (x1,y1) = (x0 + x1, y0 + y1) 
 
 genUntil : (a -> Bool) -> Generator a -> Seed -> (a, Seed)
 genUntil f g s = 
@@ -109,16 +109,16 @@ stepGame (dir, b) m =
                 (pt, s') = genUntil (\pt -> not (pt `L.member` s || pt == hd)) (pair (int 1 m.xd) (int 1 m.yd)) m.seed
             in 
               --make the snake longer, update the seed, update the mouse, update the direction.
-              {m | snake <- hd::s
-                 , seed <- s'
-                 , mouse <- pt
-                 , dir <- d}
+              {m | snake = hd::s
+                 , seed = s'
+                 , mouse = pt
+                 , dir = d}
         else 
             --move the head, delete the tail
-            {m | snake <- hd::(body s), dir <- d}
+            {m | snake = hd::(body s), dir = d}
     else
         --the snake hits the wall or itself, and dies
-        {m | alive <- False}) |> Debug.watchSummary "Snake" .snake
+        {m | alive = False}) |> Debug.watchSummary "Snake" .snake
 
 inBounds : (Int, Int) -> Game -> Bool
 inBounds (x,y) m = 
@@ -163,13 +163,13 @@ renderGame m =
 --look at which arrow keys are down, and return a direction
 inputDir : Signal (Int,Int)
 inputDir = 
-  map4 (\l u d r -> ifs [(l, (-1,0)), (u, (0,1)), (d, (0,-1)), (r, (1,0))] (0,0)) (isDown 37) (isDown 38) (isDown 40) (isDown 39)
+  Signal.map4 (\l u d r -> ifs [(l, (-1,0)), (u, (0,1)), (d, (0,-1)), (r, (1,0))] (0,0)) (isDown 37) (isDown 38) (isDown 40) (isDown 39)
 
 type alias Input = ((Int, Int), Bool)
 
 --get the input direction 20 times a second
 input : Signal Input
-input = sampleOn (fps 20) (map2 (,) inputDir space)
+input = sampleOn (fps 20) (Signal.map2 (,) inputDir space)
 
 --Toplevel game
 
@@ -200,7 +200,7 @@ renderWaiting =
     collage ((xmax + 2) * size) ((ymax + 2) * size) [(fromString "Press SPACE to begin." |> Text.color white) |> centered |> toForm] |> color black
 
 --SIGNAL
-main = map render (foldp step Waiting input)
+main = Signal.map render (foldp step Waiting input)
 
 
 --Ideas:

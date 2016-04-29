@@ -26,7 +26,7 @@ start = {loc = {x=0,y=0}, v = {x=0,y=0}}
 
 --UPDATE
 (.+) : Vec -> Vec -> Vec
-v1 .+ v2 = {x = v1.x + v2.x, y = v1.y + v2.y}
+(.+) v1 v2 = {x = v1.x + v2.x, y = v1.y + v2.y}
 
 step : Input -> Model -> Model
 step inp ship = 

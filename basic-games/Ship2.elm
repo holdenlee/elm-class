@@ -26,10 +26,10 @@ start = {loc = {x=0,y=0}, v = {x=0,y=0}, dir = 0}
 
 --UPDATE
 (.+) : Vec -> Vec -> Vec
-v1 .+ v2 = {x = v1.x + v2.x, y = v1.y + v2.y}
+(.+) v1 v2 = {x = v1.x + v2.x, y = v1.y + v2.y}
 
 (.*) : Float -> Vec -> Vec
-a .* v = {x = a*v.x, y = a*v.y}
+(.*) a v = {x = a*v.x, y = a*v.y}
 
 step : Input -> Ship -> Ship
 step (delta, {x, y}) {loc, v, dir} = 

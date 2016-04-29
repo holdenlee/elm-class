@@ -33,17 +33,17 @@ start = {loc = {x=0,y=0}, v = {x=0,y=0}, dir = 0}
 
 --UPDATE
 (.+) : Vec -> Vec -> Vec
-v1 .+ v2 = {x = v1.x + v2.x, y = v1.y + v2.y}
+(.+) v1 v2 = {x = v1.x + v2.x, y = v1.y + v2.y}
 
 (.%) : Float -> Float -> Float
-x .% y = iflist [(x >= y, x - 2*y),
+(.%) x y = iflist [(x >= y, x - 2*y),
                  (x < -y, x + 2*y)] x
 
 (.+%) : Vec -> Vec -> Vec
-v1 .+% v2 = {x = (v1.x + v2.x) .% xmax , y = (v1.y + v2.y) .% ymax}
+(.+%) v1 v2 = {x = (v1.x + v2.x) .% xmax , y = (v1.y + v2.y) .% ymax}
 
 (.*) : Float -> Vec -> Vec
-a .* v = {x = a*v.x, y = a*v.y}
+(.*) a v = {x = a*v.x, y = a*v.y}
 
 limit : Float -> Float -> Float
 limit m x = clamp (-m) m x

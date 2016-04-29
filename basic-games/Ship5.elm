@@ -43,17 +43,17 @@ startGame = Ingame {ship = startShip, asteroids = [startAst]}
 
 --UPDATE
 (.+) : Vec -> Vec -> Vec
-v1 .+ v2 = {x = v1.x + v2.x, y = v1.y + v2.y}
+(.+) v1 v2 = {x = v1.x + v2.x, y = v1.y + v2.y}
 
 (.%) : Float -> Float -> Float
-x .% y = iflist [(x >= y, x - 2*y),
+(.%) x y = iflist [(x >= y, x - 2*y),
                  (x < -y, x + 2*y)] x
 
 (.+%) : Vec -> Vec -> Vec
-v1 .+% v2 = {x = (v1.x + v2.x) .% xmax , y = (v1.y + v2.y) .% ymax}
+(.+%) v1 v2 = {x = (v1.x + v2.x) .% xmax , y = (v1.y + v2.y) .% ymax}
 
 (.*) : Float -> Vec -> Vec
-a .* v = {x = a*v.x, y = a*v.y}
+(.*) a v = {x = a*v.x, y = a*v.y}
 
 dist : Vec -> Vec -> Float
 dist {x,y} v1 = sqrt ((x-v1.x)^2 + (y-v1.y)^2)
@@ -72,7 +72,7 @@ limitV x v =
 
 stepObject : Input -> Object -> Object
 stepObject (delta, {x, y}, b) ({loc, v, dir, r} as obj)= 
-    {obj | loc <-  loc .+% v} 
+    {obj | loc = loc .+% v} 
 {-     dir = dir - delta/10 * (degrees (toFloat x)),
      v = limitV vmax (v .+ (((toFloat y) * delta/100) .* {x = cos dir, y = sin dir})),
      r = r}-}
@@ -87,7 +87,7 @@ checkOK obj li =
 
 stepObj : Time -> Object -> Object
 stepObj delta ({loc, v, dir, r} as obj) = 
-    {obj | loc <- loc .+% v}
+    {obj | loc = loc .+% v}
 
 step : Input -> Model -> Model
 step (delta,{x,y},b)  m = 
@@ -100,9 +100,9 @@ step (delta,{x,y},b)  m =
              then
                  let 
                      newShip = 
-                         {ship | loc <- loc .+% v, 
-                          dir <- dir - delta/10 * (degrees (toFloat x)),
-                          v <- limitV vmax (v .+ (((toFloat y) * delta/100) .* {x = cos dir, y = sin dir}))}
+                         {ship | loc = loc .+% v, 
+                          dir = dir - delta/10 * (degrees (toFloat x)),
+                          v = limitV vmax (v .+ (((toFloat y) * delta/100) .* {x = cos dir, y = sin dir}))}
                      newAsts = L.map (stepObj delta) asteroids
                  in
                    Ingame {ship = newShip, asteroids = newAsts}
