@@ -33,7 +33,14 @@ triangle n = if n <= 0
 -- tetrahedral 1 = 1
 -- tetrahedral 2 = 1 + (1 + 2)
 -- tetrahedral 3 = 1 + (1 + 2) + (1 + 2 + 3) 
-tetrahedral n = undefined
+-- tetrahedral n = undefined
 
 
 
+-- Exercise:
+fizzbuzz : Int -> String
+fizzbuzz = 
+
+-- Show the numbers up to n as strings. However, any number divisible by three is replaced by the word `Fizz` and any divisible by five by the word `Buzz`. Numbers divisible by both become `FizzBuzz`.
+-- For example, fizzbuzz 15 = [1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz]
+-- Hint: ++ adds strings, "Fizz"++"Buzz" == "FizzBuzz"
