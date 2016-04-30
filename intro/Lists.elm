@@ -57,10 +57,3 @@ sumEvens = always 0
 -- Hint: % is the mod operator. x % 2 == 1 if x is odd and x % 2 == 0 if x is even.
 mapEvenOdd : List Int -> Int
 mapEvenOdd = always 0
-
--- 10. Fizzbuzz
--- Show the numbers up to n as strings. However, any number divisible by three is replaced by the word `Fizz` and any divisible by five by the word `Buzz`. Numbers divisible by both become `FizzBuzz`.
--- For example, fizzbuzz 15 = [1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz]
--- Hint: ++ adds strings, "Fizz"++"Buzz" == "FizzBuzz"
-fizzbuzz : Int -> List String
-fizzbuzz = always 0

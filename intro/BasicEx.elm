@@ -2,7 +2,7 @@ import Graphics.Element exposing (..)
 
 -- EXERCISES
 
--- Write a `withdraw` function. 
+-- Write a `withdraw` function. Subtracts the amount from the total, except f the amount is greater than the total, then return 0.
 withdraw : Int -> Int -> Int
 withdraw amt total = 0
 
