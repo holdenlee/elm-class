@@ -26,7 +26,7 @@ update : Input -> Model -> Model
 update inp m = {position = m.position .+ inp, facing = inp}
 
 (.+) : Vector -> Vector -> Vector
-(.+) v1 v2 = {x=v1.x + v2.x, y=v1.y + v2.y}
+(.+) v1 v2 = {x=clamp 0 9 <| v1.x + v2.x, y=clamp 0 9 <| v1.y + v2.y}
 
 --VIEW
 render : Model -> Element
@@ -46,12 +46,11 @@ input = arrows
 
 main = S.map render (S.foldp update start input)
 
--- Exercise 2. Make it so that Pete cannot move off the screen: he will always have x and y coordinates in [0,9]
 -- Exercise 3. Make it so that Pete faces the direction he just moved in. Use these.
 
 pics = "https://dl.dropboxusercontent.com/u/27883775/code/imgs/iceblox.gif"
 
-peteUp = croppedImage (150,0) pics 30 30
-peteLeft = croppedImage (60,0) pics 30 30
-peteDown = croppedImage (210,0) pics 30 30
-peteRight = croppedImage (120,0) pics 30 30
+peteUp = croppedImage (150,0) 30 30 pics
+peteLeft = croppedImage (60,0) 30 30 pics
+peteDown = croppedImage (210,0) 30 30 pics
+peteRight = croppedImage (120,0) 30 30 pics
