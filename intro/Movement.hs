@@ -16,3 +16,7 @@ type alias Input = {x : Int, y : Int}
 update : Input -> Model -> Model
 update inp m = {position = m.position .+ inp, facing = inp}
 
+finalPos : List Input -> Model
+finalPos = foldl update {position = {x=0,y=0}, facing = {x=1,y=0}}
+
+main = show (finalPos [{x=1,y=0},{x=1,y=0},{x=0,y=1}])

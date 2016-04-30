@@ -15,11 +15,11 @@ b = 2*a + 1
 c : Float
 c = 5.5
 
-b1 : Int
+b1 : Float
 b1 = toFloat b
 
 -- BOOLEANS
-bool = (b < b1)
+bool = (c < b1)
 bool2 = True && not (True || False)
 
 s1 : String
@@ -70,11 +70,20 @@ square x = x^2
 -- function composition
 m = 10
 double x = 2*x
-n = addOne (double x)
+n = addOne (double m)
+-- n = 21
+
 --n = addOne <| double x
 doubleAndAddOne x = addOne <| double x
-doubleAndAddOne = addOne << double
+--doubleAndAddOne = addOne << double
 
+--higher-order functions
+doThrice : (a -> a) -> a -> a
+doThrice f x = f (f (f x))
+-- doThrice f = f << f << f
+-- doThrice f x = f <| f <| f x
+
+p = doThrice double m
 
 -- IF STATEMENTS
 -- abs : Int -> Int
@@ -89,13 +98,12 @@ admitRollerCoaster x =
         "too short"
     else if x <= 72 then
         "have fun"
-    else if x>72 then
-        "too tall"
+    else "too tall"
 
 -- OTHER DATA TYPES
 
 -- tuples
-(.+) : (Int, Int) -> (Int, Int)
+(.+) : (Int, Int) -> (Int, Int) -> (Int, Int)
 (.+) (x,y) (z,w) = (x+z, y+w)
 
 -- records
