@@ -11,10 +11,15 @@ type alias Status = HasMoney Float | Bankrupt
 --   update (-10) (HasMoney 10) = HasMoney 0
 --   update (-11) (HasMoney 10) = Bankrupt
 update : Float -> Status -> Status
+update x s = case s of
+               HasMoney y -> 
+                   if x + y >= 0 then HasMoney (x+y) else Bankrupt
+               Bankrupt -> Bankrupt
 
 -- Exercise 2: Given a starting status and a list of numbers, show the status after those transactions.
 -- ex. finalStatus (HasMoney 10) [-9, -1, 15, -3] = HasMoney 12
 -- ex. finalStatus (HasMoney 10) [-9, -2, 15, -3] = Bankrupt
 finalStatus : Status -> List Float -> Status
+finalStatus = foldl update
 
 

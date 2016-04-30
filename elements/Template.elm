@@ -2,9 +2,9 @@ import Color exposing (..)
 import Keyboard exposing (..)
 import Graphics.Element exposing (..)
 import Graphics.Collage exposing (..)
-import Signal exposing (..)
+import Signal as S
 import Time exposing (..)
-import List as L
+import List exposing (..) 
 import Graphics.Input exposing (..)
 
 --MODEL
@@ -25,7 +25,7 @@ render m = show m
 type alias Input = {}
 
 input : Signal Input
-input = constant {}
+input = S.constant {}
 
-main = map render (foldp step start input)
+main = S.map render (S.foldp step start input)
 
